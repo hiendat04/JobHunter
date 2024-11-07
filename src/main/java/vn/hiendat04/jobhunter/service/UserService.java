@@ -16,7 +16,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
-    public User saveUser(User user) {
+    public User createUser(User user) {
         return this.userRepository.save(user);
     }
 
@@ -41,7 +41,7 @@ public class UserService {
             currentUser.setEmail(user.getEmail());
             currentUser.setName(user.getName());
             currentUser.setPassword(user.getPassword());
-            currentUser = this.saveUser(currentUser);
+            currentUser = this.createUser(currentUser);
         }
         
         return currentUser;

@@ -4,55 +4,67 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.service.UserService;
+import vn.hiendat04.jobhunter.service.error.IdInvalidException;
 
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 public class UserController {
     private final UserService userService;
 
-    public UserController(UserService userService) {
+    private final PasswordEncoder passwordEncoder;
+
+    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    // @GetMapping("/user/create")
-    @PostMapping("/user")
-    public String createNewUser(@RequestBody User pUser) {
-        this.userService.saveUser(pUser);
-        return "create user";
+    // @GetMapping("/users/create")
+    @PostMapping("/users")
+    public ResponseEntity<User> createNewUser(@RequestBody User pUser) {
+        String hashedPassword = this.passwordEncoder.encode(pUser.getPassword());
+        pUser.setPassword(hashedPassword);
+        User user = this.userService.createUser(pUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @DeleteMapping("/user/{id}")
-    public String deleteUser(@PathVariable("id") long id) {
+    @DeleteMapping("/users/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable("id") long id) throws IdInvalidException {
         this.userService.deleteUserById(id);
-        return "datUser";
+        if(id >= 1500){
+            throw new IdInvalidException("Toang roi");
+        }
+        return ResponseEntity.ok("delete success");
     }
 
-    @GetMapping("/user/{id}")
-    public User fetchUserById(@PathVariable("id") long id) {
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> fetchUserById(@PathVariable("id") long id) {
         Optional<User> optUser = this.userService.fetchUserById(id);
         User user = optUser.isPresent() ? optUser.get() : null;
-        return user;
+        return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
-    @GetMapping("/user")
-    public List<User> fetchAllUser() {
+    @GetMapping("/users")
+    public ResponseEntity<List<User>> fetchAllUser() {
         List<User> users = this.userService.fetchAllUser();
-        return users;
+        return ResponseEntity.status(HttpStatus.OK).body(users);
     }
 
-    @PutMapping("/user")
-    public User updatUser(@RequestBody User user) {
-        return this.userService.updateUser(user);
+    @PutMapping("/users")
+    public ResponseEntity<User> updatUser(@RequestBody User user) {
+        User updatedUser = this.userService.updateUser(user);
+        return ResponseEntity.status(HttpStatus.OK).body(updatedUser);
     }
 
 }
