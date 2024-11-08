@@ -4,7 +4,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.service.UserService;
-import vn.hiendat04.jobhunter.service.error.IdInvalidException;
+import vn.hiendat04.jobhunter.util.error.IdInvalidException;
 
 import java.util.List;
 import java.util.Optional;

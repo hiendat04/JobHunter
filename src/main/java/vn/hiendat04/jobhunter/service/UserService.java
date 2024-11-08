@@ -43,7 +43,11 @@ public class UserService {
             currentUser.setPassword(user.getPassword());
             currentUser = this.createUser(currentUser);
         }
-        
+
         return currentUser;
+    }
+
+    public User getUserByUsername(String name) {
+        return this.userRepository.findByEmail(name);
     }
 }
