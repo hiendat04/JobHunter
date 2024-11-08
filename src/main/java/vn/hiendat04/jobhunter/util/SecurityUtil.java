@@ -35,15 +35,18 @@ public class SecurityUtil {
         Instant validity = now.plus(this.jwtKeyExpiration, ChronoUnit.SECONDS);
         // Create payload
         JwtClaimsSet claims = JwtClaimsSet.builder()
-            .issuedAt(now)
-            .expiresAt(validity)
-            .subject(authentication.getName())
-            .claim("hiendat", authentication)
-            .build();
-            
+                .issuedAt(now)
+                .expiresAt(validity)
+                .subject(authentication.getName())
+                .claim("hiendat04", authentication)
+                .build();
+
         // Create header
         JwsHeader jwsHeader = JwsHeader.with(JWT_ALGORITHM).build();
 
-        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader,claims)).getTokenValue(); // Create signature and return a comprehensive token
+        return this.jwtEncoder.encode(JwtEncoderParameters.from(jwsHeader, claims)).getTokenValue(); // Create signature
+                                                                                                     // and return a
+                                                                                                     // comprehensive
+                                                                                                     // token
     }
 }

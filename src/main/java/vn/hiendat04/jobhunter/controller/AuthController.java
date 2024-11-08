@@ -31,12 +31,14 @@ public class AuthController {
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(), loginDTO.getPassword());
 
-        // Authenticate User => Have to write loadUserByUsername function (in UserDetailsCustom.java)
+        // Authenticate User => Have to write loadUserByUsername function (in
+        // UserDetailsCustom.java)
         Authentication authentication = this.authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
         // Create a token
         String accessToken = this.securityUtil.createToken(authentication);
-        SecurityContextHolder.getContext().setAuthentication(authentication); // Save user information in Spring Security Context Holder
+        SecurityContextHolder.getContext().setAuthentication(authentication); // Save user information in Spring
+                                                                              // Security Context Holder
 
         ResponseLoginDTO responseLoginDTO = new ResponseLoginDTO();
         responseLoginDTO.setAccessToken(accessToken);
