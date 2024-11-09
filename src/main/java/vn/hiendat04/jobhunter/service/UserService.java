@@ -1,11 +1,15 @@
 package vn.hiendat04.jobhunter.service;
 
-import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hiendat04.jobhunter.domain.User;
+import vn.hiendat04.jobhunter.domain.dto.Meta;
+import vn.hiendat04.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.repository.UserRepository;
 
 @Service
@@ -28,8 +32,20 @@ public class UserService {
         return this.userRepository.findById(id);
     }
 
-    public List<User> fetchAllUser() {
-        return this.userRepository.findAll();
+    public ResultPaginationDTO fetchAllUser(Specification<User> specification, Pageable pageable) {
+        Page<User> pageUser = this.userRepository.findAll(specification, pageable);
+
+        Meta meta = new Meta();
+        meta.setPage(pageable.getPageNumber() + 1);
+        meta.setPageSize(pageable.getPageSize());
+        meta.setPages(pageUser.getTotalPages());
+        meta.setTotal(pageUser.getTotalElements());
+
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        resultPaginationDTO.setMeta(meta);
+        resultPaginationDTO.setResult(pageUser.getContent());
+
+        return resultPaginationDTO;
     }
 
     public User updateUser(User user) {
