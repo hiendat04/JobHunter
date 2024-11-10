@@ -1,5 +1,6 @@
 package vn.hiendat04.jobhunter.service;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.domain.dto.Meta;
+import vn.hiendat04.jobhunter.domain.dto.ResponseUserDTO;
 import vn.hiendat04.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.repository.UserRepository;
 
@@ -18,6 +20,10 @@ public class UserService {
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
+    }
+
+    public boolean checkEmailExists(String email) {
+        return this.userRepository.existsByEmail(email);
     }
 
     public User createUser(User user) {
@@ -42,22 +48,40 @@ public class UserService {
         meta.setTotal(pageUser.getTotalElements());
 
         ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
+        ArrayList<ResponseUserDTO> users = new ArrayList<>();
+
         resultPaginationDTO.setMeta(meta);
-        resultPaginationDTO.setResult(pageUser.getContent());
+
+        for (User user : pageUser.getContent()) {
+            ResponseUserDTO responseUserDTO = new ResponseUserDTO();
+
+            responseUserDTO.setAddress(user.getAddress());
+            responseUserDTO.setAge(user.getAge());
+            responseUserDTO.setCreatedAt(user.getCreatedAt());
+            responseUserDTO.setEmail(user.getEmail());
+            responseUserDTO.setGender(user.getGender());
+            responseUserDTO.setId(user.getId());
+            responseUserDTO.setName(user.getName());
+            responseUserDTO.setUpdatedAt(user.getUpdatedAt());
+
+            users.add(responseUserDTO);
+        }
+
+        resultPaginationDTO.setResult(users);
 
         return resultPaginationDTO;
     }
 
     public User updateUser(User user) {
-        User currentUser = this.userRepository.findById(user.getId()).isPresent()
-                ? this.userRepository.findById(user.getId()).get()
-                : null;
+        User currentUser = this.fetchUserById(user.getId()).get();
 
         if (currentUser != null) {
-            currentUser.setEmail(user.getEmail());
+            currentUser.setGender(user.getGender());
+            currentUser.setAge(user.getAge());
+            currentUser.setAddress(user.getAddress());
             currentUser.setName(user.getName());
-            currentUser.setPassword(user.getPassword());
-            currentUser = this.createUser(currentUser);
+
+            currentUser = this.userRepository.save(currentUser);
         }
 
         return currentUser;
