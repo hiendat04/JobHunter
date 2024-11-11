@@ -26,6 +26,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/v1") // versioning API
@@ -129,5 +131,5 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.OK).body(responseUserUpdateDTO);
     }
-
+    
 }
