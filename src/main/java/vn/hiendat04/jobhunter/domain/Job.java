@@ -4,6 +4,7 @@ import java.time.Instant;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import vn.hiendat04.jobhunter.util.SecurityUtil;
 
@@ -43,7 +44,7 @@ public class Job {
 
     private Instant startDate;
     private Instant endDate;
-    private boolean isActive;
+    private boolean active;
     private Instant createdAt;
     private Instant updatedAt;
     private String createdBy;
@@ -53,8 +54,8 @@ public class Job {
     @JoinColumn(name = "company_id")
     private Company company;
 
-    @ManyToMany(fetch = FetchType.LAZY)
-    @JsonIgnore
+    @ManyToMany(fetch = FetchType.LAZY) 
+    @JsonIgnoreProperties(value = { "jobs" }) // to avoid infinity loops
     @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
     private List<Skill> skills;
 
@@ -146,12 +147,12 @@ public class Job {
         this.endDate = endDate;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public List<Skill> getSkills() {
+        return skills;
     }
 
-    public void setActive(boolean isActive) {
-        this.isActive = isActive;
+    public void setSkills(List<Skill> skills) {
+        this.skills = skills;
     }
 
     public Instant getCreatedAt() {
@@ -192,6 +193,14 @@ public class Job {
 
     public void setCompany(Company company) {
         this.company = company;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
 }
