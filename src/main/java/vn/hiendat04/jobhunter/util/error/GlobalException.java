@@ -44,17 +44,6 @@ public class GlobalException {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
     }
 
-    @ExceptionHandler(value = {
-            NullPointerException.class
-    })
-    public ResponseEntity<RestResponse<Object>> hanldeInvalidFilterException(Exception e) {
-        RestResponse<Object> res = new RestResponse<>();
-        res.setStatusCode(HttpStatus.NOT_FOUND.value());
-        res.setError(e.getMessage());
-        res.setMessage("Invalid filter!");
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(res);
-    }
-
     // Set response message for username and password must not be blank
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<RestResponse<Object>> validationError(

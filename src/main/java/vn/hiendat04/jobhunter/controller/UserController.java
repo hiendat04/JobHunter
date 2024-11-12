@@ -6,13 +6,17 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import vn.hiendat04.jobhunter.domain.User;
+import vn.hiendat04.jobhunter.domain.Company;
 import vn.hiendat04.jobhunter.domain.response.ResponseUserCreateDTO;
 import vn.hiendat04.jobhunter.domain.response.ResponseUserDTO;
 import vn.hiendat04.jobhunter.domain.response.ResponseUserUpdateDTO;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
+import vn.hiendat04.jobhunter.service.CompanyService;
 import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;
 import vn.hiendat04.jobhunter.util.error.IdInvalidException;
+
+import java.util.Optional;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,19 +30,19 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/v1") // versioning API
 public class UserController {
     private final UserService userService;
+    private final CompanyService companyService;
 
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder, CompanyService companyService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
+        this.companyService = companyService;
     }
 
     // @GetMapping("/users/create")
@@ -46,11 +50,13 @@ public class UserController {
     @ApiMessage("Create a new user")
     public ResponseEntity<ResponseUserCreateDTO> createNewUser(@Valid @RequestBody User user)
             throws IdInvalidException {
+
         // Check if email is existing
         if (this.userService.checkEmailExists(user.getEmail())) {
             throw new IdInvalidException("Email " + user.getEmail() + " is existing, please choose another email!");
         }
 
+        // Hash password before create user
         String hashedPassword = this.passwordEncoder.encode(user.getPassword());
         user.setPassword(hashedPassword);
         User newUser = this.userService.createUser(user);
@@ -64,6 +70,15 @@ public class UserController {
         responseUserDTO.setGender(newUser.getGender());
         responseUserDTO.setId(newUser.getId());
         responseUserDTO.setName(newUser.getName());
+
+        // Set company response data
+        ResponseUserCreateDTO.CompanyCreate company = new ResponseUserCreateDTO.CompanyCreate();
+        if (newUser.getCompany() != null) {
+            company.setId(newUser.getCompany().getId());
+            company.setName(newUser.getCompany().getName());
+        }
+
+        responseUserDTO.setCompany(company);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(responseUserDTO);
 
@@ -98,6 +113,14 @@ public class UserController {
         responseUserDTO.setName(user.getName());
         responseUserDTO.setUpdatedAt(user.getUpdatedAt());
 
+        // Set company response data
+        ResponseUserDTO.CompanyFetch company = new ResponseUserDTO.CompanyFetch();
+        if (user.getCompany() != null) {
+            company.setId(user.getCompany().getId());
+            company.setName(user.getCompany().getName());
+        }
+
+        responseUserDTO.setCompany(company);
         return ResponseEntity.status(HttpStatus.OK).body(responseUserDTO);
     }
 
@@ -113,23 +136,32 @@ public class UserController {
 
     @PutMapping("/users")
     @ApiMessage("Update user")
-    public ResponseEntity<ResponseUserUpdateDTO> updatUser(@RequestBody User user) throws IdInvalidException {
+    public ResponseEntity<ResponseUserUpdateDTO> updateUser(@RequestBody User user) throws IdInvalidException {
         if (this.userService.fetchUserById(user.getId()).isPresent() == false) {
             throw new IdInvalidException("Id = " + user.getId() + " doest not exist!");
         }
 
         User updatedUser = this.userService.updateUser(user);
         ResponseUserUpdateDTO responseUserUpdateDTO = new ResponseUserUpdateDTO();
+        ResponseUserUpdateDTO.CompanyUpdate company = new ResponseUserUpdateDTO.CompanyUpdate();
 
         // Convert to DTO (not to show email and password)
-        responseUserUpdateDTO.setId(user.getId());
+        responseUserUpdateDTO.setId(updatedUser.getId());
         responseUserUpdateDTO.setAddress(updatedUser.getAddress());
         responseUserUpdateDTO.setAge(updatedUser.getAge());
         responseUserUpdateDTO.setUpdatedAt(updatedUser.getUpdatedAt());
         responseUserUpdateDTO.setGender(updatedUser.getGender());
         responseUserUpdateDTO.setName(updatedUser.getName());
 
+        // Set company response data
+        if (user.getCompany() != null) {
+            company.setId(updatedUser.getCompany().getId());
+            company.setName(updatedUser.getCompany().getName());
+        }
+
+        responseUserUpdateDTO.setCompany(company);
+
         return ResponseEntity.status(HttpStatus.OK).body(responseUserUpdateDTO);
     }
-    
+
 }

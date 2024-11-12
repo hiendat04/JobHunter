@@ -147,6 +147,7 @@ public class AuthController {
                 currentUser.getId(),
                 currentUser.getEmail(),
                 currentUser.getName());
+                
         responseLoginDTO.setUser(user);
 
         // Create access token

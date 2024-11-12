@@ -12,6 +12,7 @@ public class ResponseUserCreateDTO {
     private String address;
     private int age;
     private Instant createdAt;
+    private CompanyCreate company;
 
     public long getId() {
         return id;
@@ -69,4 +70,33 @@ public class ResponseUserCreateDTO {
         this.createdAt = createdAt;
     }
 
+    public CompanyCreate getCompany() {
+        return company;
+    }
+
+    public void setCompany(CompanyCreate company) {
+        this.company = company;
+    }
+
+    public static class CompanyCreate {
+        private long id;
+        private String name;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
 }

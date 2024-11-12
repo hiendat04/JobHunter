@@ -8,5 +8,5 @@ import vn.hiendat04.jobhunter.domain.Company;
 
 @Repository
 public interface CompanyRepository extends JpaRepository<Company, Long>, JpaSpecificationExecutor<Company> {
-    
+    boolean existsById(long id);
 }

@@ -6,9 +6,13 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import vn.hiendat04.jobhunter.domain.Company;
+import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.service.CompanyService;
+import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;
+
+import java.util.List;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -26,9 +30,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/api/v1")
 public class CompanyController {
     private final CompanyService companyService;
+    private final UserService userService;
 
-    public CompanyController(CompanyService companyService) {
+    public CompanyController(CompanyService companyService, UserService userService) {
         this.companyService = companyService;
+        this.userService = userService;
     }
 
     @PostMapping("/companies")
@@ -56,12 +62,12 @@ public class CompanyController {
 
     @PutMapping("/companies")
     public ResponseEntity<Company> updateCompany(@Valid @RequestBody Company company) {
-        // TODO: process PUT request
         Company updatedCompany = this.companyService.updateCompany(company);
         return ResponseEntity.ok().body(updatedCompany);
     }
 
     @DeleteMapping("/companies/{id}")
+    @ApiMessage("Delete company successfully!")
     public ResponseEntity<Void> deleteCompany(@PathVariable("id") long id) {
         this.companyService.deleteCompany(id);
         return ResponseEntity.ok().body(null);

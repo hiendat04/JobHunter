@@ -13,6 +13,7 @@ public class ResponseUserDTO {
     private int age;
     private Instant updatedAt;
     private Instant createdAt;
+    private CompanyFetch company;
 
     public long getId() {
         return id;
@@ -78,4 +79,33 @@ public class ResponseUserDTO {
         this.updatedAt = updatedAt;
     }
 
+    public CompanyFetch getCompany() {
+        return company;
+    }
+
+    public void setCompany(CompanyFetch company) {
+        this.company = company;
+    }
+
+    public static class CompanyFetch {
+        private long id;
+        private String name;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
 }

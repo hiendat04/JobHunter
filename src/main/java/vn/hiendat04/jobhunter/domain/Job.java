@@ -1,62 +1,62 @@
 package vn.hiendat04.jobhunter.domain;
 
+import java.time.Instant;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import vn.hiendat04.jobhunter.util.SecurityUtil;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
-import vn.hiendat04.jobhunter.util.constant.GenderEnum;
-import vn.hiendat04.jobhunter.util.SecurityUtil;
-
-import java.time.Instant;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import vn.hiendat04.jobhunter.util.constant.LevelEnum;
 
 @Entity
-@Table(name = "users")
-public class User {
+@Table(name = "jobs")
+public class Job {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
-
     private String name;
-
-    @NotBlank(message = "email must not be empty!")
-    private String email;
-
-    @NotBlank(message = "password must not be empty")
-    private String password;
-
-    private int age;
+    private String location;
+    private double salary;
+    private int quantity;
 
     @Enumerated(EnumType.STRING)
-    private GenderEnum gender;
-
-    private String address;
+    private LevelEnum level;
 
     @Column(columnDefinition = "MEDIUMTEXT")
-    private String refreshToken;
+    private String description;
 
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    private Instant startDate;
+    private Instant endDate;
+    private boolean isActive;
     private Instant createdAt;
-
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant updatedAt;
-
     private String createdBy;
     private String updatedBy;
 
     @ManyToOne
     @JoinColumn(name = "company_id")
     private Company company;
+
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinTable(name = "job_skill", joinColumns = @JoinColumn(name = "job_id"), inverseJoinColumns = @JoinColumn(name = "skill_id"))
+    private List<Skill> skills;
 
     @PrePersist
     public void handleBeforeCreate() {
@@ -74,6 +74,14 @@ public class User {
         this.updatedAt = Instant.now();
     }
 
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
@@ -82,40 +90,68 @@ public class User {
         this.name = name;
     }
 
-    public String getEmail() {
-        return email;
+    public String getLocation() {
+        return location;
     }
 
-    public int getAge() {
-        return age;
+    public void setLocation(String location) {
+        this.location = location;
     }
 
-    public void setAge(int age) {
-        this.age = age;
+    public double getSalary() {
+        return salary;
     }
 
-    public GenderEnum getGender() {
-        return gender;
+    public void setSalary(double salary) {
+        this.salary = salary;
     }
 
-    public void setGender(GenderEnum gender) {
-        this.gender = gender;
+    public int getQuantity() {
+        return quantity;
     }
 
-    public String getAddress() {
-        return address;
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
-    public void setAddress(String address) {
-        this.address = address;
+    public LevelEnum getLevel() {
+        return level;
     }
 
-    public String getRefreshToken() {
-        return refreshToken;
+    public void setLevel(LevelEnum level) {
+        this.level = level;
     }
 
-    public void setRefreshToken(String refreshToken) {
-        this.refreshToken = refreshToken;
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Instant getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(Instant startDate) {
+        this.startDate = startDate;
+    }
+
+    public Instant getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Instant endDate) {
+        this.endDate = endDate;
+    }
+
+    public boolean isActive() {
+        return isActive;
+    }
+
+    public void setActive(boolean isActive) {
+        this.isActive = isActive;
     }
 
     public Instant getCreatedAt() {
@@ -150,26 +186,6 @@ public class User {
         this.updatedBy = updatedBy;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
     public Company getCompany() {
         return company;
     }
@@ -177,5 +193,5 @@ public class User {
     public void setCompany(Company company) {
         this.company = company;
     }
-    
+
 }

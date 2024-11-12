@@ -10,6 +10,7 @@ public class ResponseUserUpdateDTO {
     private String address;
     private int age;
     private Instant updatedAt;
+    private CompanyUpdate company;
 
     public long getId() {
         return id;
@@ -57,6 +58,36 @@ public class ResponseUserUpdateDTO {
 
     public void setUpdatedAt(Instant updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    public CompanyUpdate getCompany() {
+        return company;
+    }
+
+    public void setCompany(CompanyUpdate company) {
+        this.company = company;
+    }
+
+    public static class CompanyUpdate {
+        private long id;
+        private String name;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
     }
 
 }
