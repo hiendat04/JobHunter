@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import vn.hiendat04.jobhunter.domain.User;
-import vn.hiendat04.jobhunter.domain.dto.RequestLoginDTO;
-import vn.hiendat04.jobhunter.domain.dto.ResponseLoginDTO;
+import vn.hiendat04.jobhunter.domain.request.RequestLoginDTO;
+import vn.hiendat04.jobhunter.domain.response.ResponseLoginDTO;
 import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.util.SecurityUtil;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;

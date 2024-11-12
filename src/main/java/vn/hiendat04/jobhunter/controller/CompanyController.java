@@ -6,7 +6,7 @@ import com.turkraft.springfilter.boot.Filter;
 
 import jakarta.validation.Valid;
 import vn.hiendat04.jobhunter.domain.Company;
-import vn.hiendat04.jobhunter.domain.dto.ResultPaginationDTO;
+import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.service.CompanyService;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;
 

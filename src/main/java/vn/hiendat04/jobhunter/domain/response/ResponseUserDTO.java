@@ -1,16 +1,17 @@
-package vn.hiendat04.jobhunter.domain.dto;
-
-import vn.hiendat04.jobhunter.util.constant.GenderEnum;
+package vn.hiendat04.jobhunter.domain.response;
 
 import java.time.Instant;
 
-public class ResponseUserCreateDTO {
+import vn.hiendat04.jobhunter.util.constant.GenderEnum;
+
+public class ResponseUserDTO {
     private long id;
     private String name;
     private String email;
     private GenderEnum gender;
     private String address;
     private int age;
+    private Instant updatedAt;
     private Instant createdAt;
 
     public long getId() {
@@ -67,6 +68,14 @@ public class ResponseUserCreateDTO {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
 }

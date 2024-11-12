@@ -6,7 +6,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hiendat04.jobhunter.domain.Company;
-import vn.hiendat04.jobhunter.domain.dto.ResultPaginationDTO;
+import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.repository.CompanyRepository;
 
 @Service
