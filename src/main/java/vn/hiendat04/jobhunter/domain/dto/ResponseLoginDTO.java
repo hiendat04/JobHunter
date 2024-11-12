@@ -1,7 +1,13 @@
 package vn.hiendat04.jobhunter.domain.dto;
 
+import org.springframework.boot.autoconfigure.security.SecurityProperties.User;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class ResponseLoginDTO {
+    @JsonProperty("access_token")
     private String accessToken;
+
     private UserLogin user;
 
     public UserLogin getUser() {
@@ -57,6 +63,28 @@ public class ResponseLoginDTO {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+    }
+
+    // Change the data is covered by the prefix "user" in response body
+    public static class UserGetAccount {
+        private UserLogin user;
+
+        public UserGetAccount() {
+
+        }
+
+        public UserGetAccount(UserLogin user) {
+            this.user = user;
+        }
+
+        public UserLogin getUser() {
+            return user;
+        }
+
+        public void setUser(UserLogin user) {
+            this.user = user;
         }
 
     }

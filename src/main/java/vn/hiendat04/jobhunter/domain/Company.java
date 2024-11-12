@@ -31,9 +31,8 @@ public class Company {
     private String address;
     private String logo;
 
-    // Format date created just for Frontend, but at Backend the date will remain
-    // GMT+0
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
+    // Format date created just for Frontend, but at Backend the date will remain GMT+0
+    // @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss a", timezone = "GMT+7")
     private Instant createdAt;
 
     private Instant updatedAt;

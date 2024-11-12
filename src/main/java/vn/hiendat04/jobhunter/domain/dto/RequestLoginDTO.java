@@ -2,7 +2,7 @@ package vn.hiendat04.jobhunter.domain.dto;
 
 import jakarta.validation.constraints.NotBlank;
 
-public class LoginDTO {
+public class RequestLoginDTO {
 
     @NotBlank(message = "username must not be blank")
     private String username;

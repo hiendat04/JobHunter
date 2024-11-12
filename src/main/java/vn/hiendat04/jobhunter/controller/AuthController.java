@@ -15,10 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
 import jakarta.validation.Valid;
 import vn.hiendat04.jobhunter.domain.User;
-import vn.hiendat04.jobhunter.domain.dto.LoginDTO;
+import vn.hiendat04.jobhunter.domain.dto.RequestLoginDTO;
 import vn.hiendat04.jobhunter.domain.dto.ResponseLoginDTO;
 import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.util.SecurityUtil;
@@ -27,7 +26,6 @@ import vn.hiendat04.jobhunter.util.error.IdInvalidException;
 
 import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -51,7 +49,7 @@ public class AuthController {
 
     @PostMapping("/auth/login")
     @ApiMessage("User login")
-    public ResponseEntity<ResponseLoginDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<ResponseLoginDTO> login(@Valid @RequestBody RequestLoginDTO loginDTO) {
         // Send username and password to Security
         UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
                 loginDTO.getUsername(), loginDTO.getPassword());
@@ -100,20 +98,23 @@ public class AuthController {
 
     @GetMapping("/auth/account")
     @ApiMessage("fetch account")
-    public ResponseEntity<ResponseLoginDTO.UserLogin> FetchAccount() {
+    public ResponseEntity<ResponseLoginDTO.UserGetAccount> FetchAccount() {
         String email = SecurityUtil.getCurrentUserLogin().isPresent()
                 ? SecurityUtil.getCurrentUserLogin().get()
                 : "";
 
         User currentUser = this.userService.getUserByUsername(email);
         ResponseLoginDTO.UserLogin user = new ResponseLoginDTO.UserLogin();
+        ResponseLoginDTO.UserGetAccount userGetAccount = new ResponseLoginDTO.UserGetAccount();
 
         if (currentUser != null) {
             user.setId(currentUser.getId());
             user.setEmail(email);
             user.setName(currentUser.getName());
+
+            userGetAccount.setUser(user);
         }
-        return ResponseEntity.ok().body(user);
+        return ResponseEntity.ok().body(userGetAccount);
     }
 
     // The refresh token is saved as long as user login
@@ -178,7 +179,7 @@ public class AuthController {
         // Get the email of current user
         String email = SecurityUtil.getCurrentUserLogin().get();
 
-        if(email.equals(null)){
+        if (email.equals(null)) {
             throw new IdInvalidException("Access token is invalid");
         }
 

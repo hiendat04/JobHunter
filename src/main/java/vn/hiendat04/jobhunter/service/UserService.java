@@ -9,7 +9,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import vn.hiendat04.jobhunter.domain.User;
-import vn.hiendat04.jobhunter.domain.dto.Meta;
 import vn.hiendat04.jobhunter.domain.dto.ResponseUserDTO;
 import vn.hiendat04.jobhunter.domain.dto.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.repository.UserRepository;
@@ -40,14 +39,14 @@ public class UserService {
 
     public ResultPaginationDTO fetchAllUser(Specification<User> specification, Pageable pageable) {
         Page<User> pageUser = this.userRepository.findAll(specification, pageable);
+        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
 
-        Meta meta = new Meta();
+        ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
         meta.setPage(pageable.getPageNumber() + 1);
         meta.setPageSize(pageable.getPageSize());
         meta.setPages(pageUser.getTotalPages());
         meta.setTotal(pageUser.getTotalElements());
 
-        ResultPaginationDTO resultPaginationDTO = new ResultPaginationDTO();
         ArrayList<ResponseUserDTO> users = new ArrayList<>();
 
         resultPaginationDTO.setMeta(meta);
@@ -91,15 +90,15 @@ public class UserService {
         return this.userRepository.findByEmail(name);
     }
 
-    public void updateUserToken(String token, String email){
+    public void updateUserToken(String token, String email) {
         User currentUser = this.getUserByUsername(email);
-        if(currentUser != null){
+        if (currentUser != null) {
             currentUser.setRefreshToken(token);
             this.userRepository.save(currentUser);
         }
     }
 
-    public User getUserByRefreshTokenAndEmail(String token, String email){
+    public User getUserByRefreshTokenAndEmail(String token, String email) {
         return this.userRepository.findByRefreshTokenAndEmail(token, email);
     }
 }

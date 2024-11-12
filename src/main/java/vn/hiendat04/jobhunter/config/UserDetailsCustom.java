@@ -1,4 +1,4 @@
-package vn.hiendat04.jobhunter.service;
+package vn.hiendat04.jobhunter.config;
 
 import java.util.Collections;
 
@@ -8,6 +8,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
+
+import vn.hiendat04.jobhunter.service.UserService;
 
 @Component("userDetailService") // Override Bean
 public class UserDetailsCustom implements UserDetailsService {
