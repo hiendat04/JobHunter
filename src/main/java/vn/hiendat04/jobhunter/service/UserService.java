@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.domain.Company;
+import vn.hiendat04.jobhunter.domain.Resume;
 import vn.hiendat04.jobhunter.domain.response.ResponseUserDTO;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.repository.UserRepository;
@@ -28,6 +29,10 @@ public class UserService {
 
     public boolean checkEmailExists(String email) {
         return this.userRepository.existsByEmail(email);
+    }
+
+    public boolean checkUserExists(long id) {
+        return this.userRepository.existsById(id);
     }
 
     public User createUser(User user) {
@@ -134,4 +139,5 @@ public class UserService {
     public void deleteAll(List<User> users) {
         this.userRepository.deleteAll(users);
     }
+
 }
