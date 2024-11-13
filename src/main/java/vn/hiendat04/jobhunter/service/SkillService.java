@@ -1,7 +1,5 @@
 package vn.hiendat04.jobhunter.service;
 
-import java.util.Optional;
-
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.jpa.domain.Specification;
@@ -19,8 +17,11 @@ public class SkillService {
         this.skillRepository = skillRepository;
     }
 
-    public Optional<Skill> getSkillById(long id) {
-        return this.skillRepository.findById(id);
+    public Skill fetchSkillById(long id) {
+        Skill skill = this.skillRepository.findById(id).isPresent()
+                ? this.skillRepository.findById(id).get()
+                : null;
+        return skill;
     }
 
     public Skill createSkill(Skill skill) {
@@ -32,7 +33,7 @@ public class SkillService {
     }
 
     public Skill updateSkill(Skill skill) {
-        Skill currentSkill = this.getSkillById(skill.getId()).get();
+        Skill currentSkill = this.fetchSkillById(skill.getId());
 
         if (currentSkill != null) {
             currentSkill.setName(skill.getName());
@@ -56,5 +57,14 @@ public class SkillService {
         res.setResult(pageSkill.getContent());
 
         return res;
+    }
+
+    public void deleteSkill(long id) {
+        // Delete job (inside job_skill table)
+        Skill currentSkill = this.fetchSkillById(id);
+        currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
+
+        // Then delete skill
+        this.skillRepository.delete(currentSkill);
     }
 }

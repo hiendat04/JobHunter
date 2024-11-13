@@ -107,5 +107,6 @@ public class ResponseUserDTO {
             this.name = name;
         }
 
+        
     }
 }

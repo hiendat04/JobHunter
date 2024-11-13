@@ -101,4 +101,14 @@ public class Skill {
         this.updatedBy = updatedBy;
     }
 
+    public List<Job> getJobs() {
+        return jobs;
+    }
+
+    public void setJobs(List<Job> jobs) {
+        this.jobs = jobs;
+    }
+
+    
+
 }
