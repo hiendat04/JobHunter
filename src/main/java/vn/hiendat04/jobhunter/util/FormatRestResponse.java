@@ -1,6 +1,10 @@
 package vn.hiendat04.jobhunter.util;
 
+import java.io.InputStream;
+
 import org.springframework.core.MethodParameter;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
@@ -34,7 +38,7 @@ public class FormatRestResponse implements ResponseBodyAdvice<Object> {
         RestResponse<Object> res = new RestResponse<>();
         res.setStatusCode(status);
 
-        if (body instanceof String) {
+        if (body instanceof String || body instanceof Resource) {
             return body;
         }
 

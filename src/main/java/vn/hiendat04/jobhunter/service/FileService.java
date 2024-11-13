@@ -1,6 +1,8 @@
 package vn.hiendat04.jobhunter.service;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -11,6 +13,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -47,5 +51,25 @@ public class FileService {
                     StandardCopyOption.REPLACE_EXISTING);
         }
         return finalName;
+    }
+
+    public long getFileLength(String fileName, String folder) throws URISyntaxException {
+        URI uri = new URI(baseUri + folder + "/" + fileName);
+        Path path = Paths.get(uri);
+
+        File tmpDir = new File(path.toString());
+
+        // If file does not exist or file is a directory => return 0
+        if (!tmpDir.exists() || tmpDir.isDirectory()) {
+            return 0;
+        }
+        return tmpDir.length();
+    }
+
+    public ByteArrayResource getResource(String fileName, String folder)
+            throws URISyntaxException, FileNotFoundException, IOException {
+        URI uri = new URI(baseUri + folder + "/" + fileName);
+        Path path = Paths.get(uri);
+        return new ByteArrayResource(Files.readAllBytes(path));
     }
 }
