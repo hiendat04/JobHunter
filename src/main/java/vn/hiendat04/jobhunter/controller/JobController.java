@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.turkraft.springfilter.boot.Filter;
 
 import vn.hiendat04.jobhunter.domain.Job;
-import vn.hiendat04.jobhunter.domain.response.ResJobCreateDTO;
-import vn.hiendat04.jobhunter.domain.response.ResJobUpdateDTO;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
+import vn.hiendat04.jobhunter.domain.response.job.ResJobCreateDTO;
+import vn.hiendat04.jobhunter.domain.response.job.ResJobUpdateDTO;
 import vn.hiendat04.jobhunter.service.JobService;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;
 import vn.hiendat04.jobhunter.util.error.IdInvalidException;

@@ -1,18 +1,16 @@
-package vn.hiendat04.jobhunter.domain.response;
-
-import vn.hiendat04.jobhunter.util.constant.GenderEnum;
+package vn.hiendat04.jobhunter.domain.response.user;
 
 import java.time.Instant;
+import vn.hiendat04.jobhunter.util.constant.GenderEnum;;
 
-public class ResponseUserCreateDTO {
+public class ResponseUserUpdateDTO {
     private long id;
     private String name;
-    private String email;
     private GenderEnum gender;
     private String address;
     private int age;
-    private Instant createdAt;
-    private CompanyCreate company;
+    private Instant updatedAt;
+    private CompanyUpdate company;
 
     public long getId() {
         return id;
@@ -28,14 +26,6 @@ public class ResponseUserCreateDTO {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public GenderEnum getGender() {
@@ -62,23 +52,23 @@ public class ResponseUserCreateDTO {
         this.age = age;
     }
 
-    public Instant getCreatedAt() {
-        return createdAt;
+    public Instant getUpdatedAt() {
+        return updatedAt;
     }
 
-    public void setCreatedAt(Instant createdAt) {
-        this.createdAt = createdAt;
+    public void setUpdatedAt(Instant updatedAt) {
+        this.updatedAt = updatedAt;
     }
 
-    public CompanyCreate getCompany() {
+    public CompanyUpdate getCompany() {
         return company;
     }
 
-    public void setCompany(CompanyCreate company) {
+    public void setCompany(CompanyUpdate company) {
         this.company = company;
     }
 
-    public static class CompanyCreate {
+    public static class CompanyUpdate {
         private long id;
         private String name;
 
@@ -99,4 +89,5 @@ public class ResponseUserCreateDTO {
         }
 
     }
+
 }

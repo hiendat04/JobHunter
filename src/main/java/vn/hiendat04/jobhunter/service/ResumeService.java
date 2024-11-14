@@ -81,6 +81,10 @@ public class ResumeService {
         res.setUpdatedBy(resume.getUpdatedBy());
         res.setUrl(resume.getUrl());
 
+        if (resume.getJob() != null) {
+            res.setCompanyName(resume.getJob().getCompany().getName());
+        }
+
         user.setId(resume.getUser().getId());
         user.setName(resume.getUser().getName());
         res.setUser(user);

@@ -14,6 +14,7 @@ public class ResResumeFetchDTO {
     private String createdBy;
     private String updatedBy;
 
+    private String companyName;
     private ResResumeFetchDTO.JobResume job;
     private ResResumeFetchDTO.UserResume user;
 
@@ -139,5 +140,13 @@ public class ResResumeFetchDTO {
             this.name = name;
         }
 
+    }
+
+    public String getCompanyName() {
+        return companyName;
+    }
+
+    public void setCompanyName(String companyName) {
+        this.companyName = companyName;
     }
 }

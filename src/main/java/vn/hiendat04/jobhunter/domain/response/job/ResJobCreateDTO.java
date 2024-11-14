@@ -1,11 +1,13 @@
-package vn.hiendat04.jobhunter.domain.response;
+package vn.hiendat04.jobhunter.domain.response.job;
 
 import java.time.Instant;
 import java.util.List;
 
 import vn.hiendat04.jobhunter.util.constant.LevelEnum;
+import vn.hiendat04.jobhunter.domain.Skill;
 
-public class ResJobUpdateDTO {
+public class ResJobCreateDTO {
+
     private long id;
     private String name;
     private String location;
@@ -15,8 +17,8 @@ public class ResJobUpdateDTO {
     private Instant startDate;
     private Instant endDate;
     private List<String> skills;
-    private Instant updatedAt;
-    private String updatedBy;
+    private Instant createdAt;
+    private String createdBy;
     private boolean active;
 
     public long getId() {
@@ -91,28 +93,28 @@ public class ResJobUpdateDTO {
         this.skills = skills;
     }
 
-    public Instant getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Instant updatedAt) {
-        this.updatedAt = updatedAt;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
     public boolean isActive() {
         return active;
     }
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(Instant createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
     }
 
 }

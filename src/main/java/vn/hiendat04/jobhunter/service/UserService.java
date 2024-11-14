@@ -12,8 +12,8 @@ import org.springframework.stereotype.Service;
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.domain.Company;
 import vn.hiendat04.jobhunter.domain.Resume;
-import vn.hiendat04.jobhunter.domain.response.ResponseUserDTO;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
+import vn.hiendat04.jobhunter.domain.response.user.ResponseUserDTO;
 import vn.hiendat04.jobhunter.repository.UserRepository;
 import vn.hiendat04.jobhunter.repository.CompanyRepository;
 
