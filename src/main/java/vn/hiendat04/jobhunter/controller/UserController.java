@@ -7,11 +7,13 @@ import com.turkraft.springfilter.boot.Filter;
 import jakarta.validation.Valid;
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.domain.Company;
+import vn.hiendat04.jobhunter.domain.Role;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.domain.response.user.ResponseUserCreateDTO;
 import vn.hiendat04.jobhunter.domain.response.user.ResponseUserDTO;
 import vn.hiendat04.jobhunter.domain.response.user.ResponseUserUpdateDTO;
 import vn.hiendat04.jobhunter.service.CompanyService;
+import vn.hiendat04.jobhunter.service.RoleService;
 import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;
 import vn.hiendat04.jobhunter.util.error.IdInvalidException;
@@ -35,14 +37,13 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping("/api/v1") // versioning API
 public class UserController {
     private final UserService userService;
-    private final CompanyService companyService;
-
+    private final RoleService roleService;
     private final PasswordEncoder passwordEncoder;
 
-    public UserController(UserService userService, PasswordEncoder passwordEncoder, CompanyService companyService) {
+    public UserController(UserService userService, PasswordEncoder passwordEncoder, RoleService roleService) {
         this.userService = userService;
         this.passwordEncoder = passwordEncoder;
-        this.companyService = companyService;
+        this.roleService = roleService;
     }
 
     // @GetMapping("/users/create")
@@ -54,6 +55,12 @@ public class UserController {
         // Check if email is existing
         if (this.userService.checkEmailExists(user.getEmail())) {
             throw new IdInvalidException("Email " + user.getEmail() + " is existing, please choose another email!");
+        }
+
+        // Check if role is existing
+        if (user.getRole() != null) {
+            Role role = this.roleService.fetchRoleById(user.getRole().getId());
+            user.setRole(role != null ? role : null  );
         }
 
         // Hash password before create user

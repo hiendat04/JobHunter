@@ -88,4 +88,10 @@ public class RoleService {
     public void deleteRole(long id) {
         this.roleRepository.deleteById(id);
     }
+
+    public Role fetchRoleById(long id) {
+        return this.roleRepository.findById(id).isPresent()
+                ? this.roleRepository.findById(id).get()
+                : null;
+    }
 }

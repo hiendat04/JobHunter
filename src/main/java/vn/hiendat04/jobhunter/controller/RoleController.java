@@ -55,9 +55,9 @@ public class RoleController {
         }
 
         // Check role name exist
-        if (this.roleService.checkRoleNameExist(role.getName())) {
-            throw new IdInvalidException("Role " + role.getName() + " is existing!");
-        }
+        // if (this.roleService.checkRoleNameExist(role.getName())) {
+        //     throw new IdInvalidException("Role " + role.getName() + " is existing!");
+        // }
 
         Role updatedRole = this.roleService.updateRole(role);
         return ResponseEntity.ok().body(updatedRole);

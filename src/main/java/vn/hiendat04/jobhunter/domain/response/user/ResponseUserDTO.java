@@ -14,6 +14,7 @@ public class ResponseUserDTO {
     private Instant updatedAt;
     private Instant createdAt;
     private CompanyFetch company;
+    private RoleFetch role;
 
     public long getId() {
         return id;
@@ -87,6 +88,14 @@ public class ResponseUserDTO {
         this.company = company;
     }
 
+    public RoleFetch getRole() {
+        return role;
+    }
+
+    public void setRole(RoleFetch role) {
+        this.role = role;
+    }
+
     public static class CompanyFetch {
         private long id;
         private String name;
@@ -106,7 +115,28 @@ public class ResponseUserDTO {
         public void setName(String name) {
             this.name = name;
         }
-
-        
     }
+
+    public static class RoleFetch {
+        private long id;
+        private String name;
+
+        public long getId() {
+            return id;
+        }
+
+        public void setId(long id) {
+            this.id = id;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
+
+    }
+
 }

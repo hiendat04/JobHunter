@@ -48,7 +48,12 @@ public class SecurityUtil {
     private long refreshTokenExpiration;
 
     // Create a token
-    public String createAccessToken(String email, ResponseLoginDTO.UserLogin responseLoginDTO) {
+    public String createAccessToken(String email, ResponseLoginDTO responseLoginDTO) {
+        ResponseLoginDTO.UserInsideToken userToken = new ResponseLoginDTO.UserInsideToken();
+        userToken.setId(responseLoginDTO.getUser().getId());
+        userToken.setEmail(responseLoginDTO.getUser().getEmail());
+        userToken.setName(responseLoginDTO.getUser().getName());
+
         Instant now = Instant.now();
         Instant validity = now.plus(this.accessTokenExpiration, ChronoUnit.SECONDS);
 
@@ -62,6 +67,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
+                .claim("user", userToken)
                 .claim("permission", listAuthority)
                 .build();
 
@@ -74,8 +80,14 @@ public class SecurityUtil {
                                                                                                      // token
     }
 
-    // Create a token
+    // Create a refresh token
     public String createRefreshToken(String email, ResponseLoginDTO responseLoginDTO) {
+
+        ResponseLoginDTO.UserInsideToken userToken = new ResponseLoginDTO.UserInsideToken();
+        userToken.setId(responseLoginDTO.getUser().getId());
+        userToken.setEmail(responseLoginDTO.getUser().getEmail());
+        userToken.setName(responseLoginDTO.getUser().getName());
+
         Instant now = Instant.now();
         Instant validity = now.plus(this.refreshTokenExpiration, ChronoUnit.SECONDS);
         // Create payload
@@ -83,7 +95,7 @@ public class SecurityUtil {
                 .issuedAt(now)
                 .expiresAt(validity)
                 .subject(email)
-                .claim("user", responseLoginDTO.getUser())
+                .claim("user", userToken)
                 .build();
 
         // Create header

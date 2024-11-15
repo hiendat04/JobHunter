@@ -4,6 +4,7 @@ import vn.hiendat04.jobhunter.domain.response.resume.ResResumeCreateDTO;
 import vn.hiendat04.jobhunter.domain.response.resume.ResResumeFetchDTO;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
 import vn.hiendat04.jobhunter.repository.ResumeRepository;
+import vn.hiendat04.jobhunter.util.SecurityUtil;
 import vn.hiendat04.jobhunter.domain.Resume;
 
 import java.util.ArrayList;
@@ -14,14 +15,25 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+
+import com.turkraft.springfilter.converter.FilterSpecification;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
+import com.turkraft.springfilter.parser.FilterParser;
+import com.turkraft.springfilter.parser.node.FilterNode;
+
 import vn.hiendat04.jobhunter.domain.response.resume.ResResumeUpdateDTO;
 
 @Service
 public class ResumeService {
     private final ResumeRepository resumeRepository;
+    private final FilterParser filterParser;
+    private FilterSpecificationConverter filterSpecificationConverter;
 
-    public ResumeService(ResumeRepository resumeRepository) {
+    public ResumeService(ResumeRepository resumeRepository, FilterParser filterParser,
+            FilterSpecificationConverter filterSpecificationConverter) {
         this.resumeRepository = resumeRepository;
+        this.filterParser = filterParser;
+        this.filterSpecificationConverter = filterSpecificationConverter;
     }
 
     public Resume createResume(Resume resume) {
@@ -115,6 +127,29 @@ public class ResumeService {
         }
 
         res.setResult(result);
+
+        return res;
+    }
+
+    public ResultPaginationDTO fetchResumeByUser(Pageable pageable) {
+        // Query builder
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        FilterNode node = this.filterParser.parse("email='" + email + "'");
+        FilterSpecification<Resume> spec = this.filterSpecificationConverter.convert(node);
+        Page<Resume> pageResume = this.resumeRepository.findAll(spec, pageable);
+
+        ResultPaginationDTO res = new ResultPaginationDTO();
+        ResultPaginationDTO.Meta meta = new ResultPaginationDTO.Meta();
+
+        meta.setPage(pageResume.getNumber() + 1);
+        meta.setPageSize(pageResume.getSize());
+        meta.setPages(pageResume.getTotalPages());
+        meta.setTotal(pageResume.getNumberOfElements());
+
+        res.setMeta(meta);
+        res.setResult(pageResume.getContent());
 
         return res;
 
