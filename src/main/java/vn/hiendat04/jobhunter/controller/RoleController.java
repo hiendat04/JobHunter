@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -56,7 +57,7 @@ public class RoleController {
 
         // Check role name exist
         // if (this.roleService.checkRoleNameExist(role.getName())) {
-        //     throw new IdInvalidException("Role " + role.getName() + " is existing!");
+        // throw new IdInvalidException("Role " + role.getName() + " is existing!");
         // }
 
         Role updatedRole = this.roleService.updateRole(role);
@@ -82,6 +83,18 @@ public class RoleController {
         }
         this.roleService.deleteRole(id);
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping("/roles/{id}")
+    public ResponseEntity<Role> getById(@PathVariable("id") long id) throws IdInvalidException {
+
+        // Check if role exist
+        if (this.roleService.fetchRoleById(id) == null) {
+            throw new IdInvalidException("Role with id " + id + " does not exist!");
+        }
+
+        Role role = this.roleService.fetchRoleById(id);
+        return ResponseEntity.ok().body(role);
     }
 
 }

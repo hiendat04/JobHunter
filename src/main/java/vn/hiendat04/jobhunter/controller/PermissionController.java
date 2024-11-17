@@ -56,9 +56,10 @@ public class PermissionController {
         }
 
         // Check if permission is unique
-        boolean isPermissionUnique = this.permissionService.checkPermissionUnique(permission);
-        if (isPermissionUnique) {
-            throw new IdInvalidException("Permission must be unique!");
+        if (this.permissionService.checkPermissionUnique(permission)) {
+            // Check name
+            if (this.permissionService.isSameName(permission.getName()))
+                throw new IdInvalidException("Permission must be unique!");
         }
 
         Permission updatedPermission = this.permissionService.updatePermission(permission);

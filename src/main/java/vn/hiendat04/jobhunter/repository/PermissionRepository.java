@@ -11,4 +11,5 @@ public interface PermissionRepository extends JpaRepository<Permission, Long>, J
     boolean existsByApiPath(String apiPath);
     boolean existsByMethod(String method);
     boolean existsByModule(String module);
+    boolean existsByName(String name);
 }

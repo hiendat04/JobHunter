@@ -6,7 +6,9 @@ import org.springframework.stereotype.Repository;
 
 import vn.hiendat04.jobhunter.domain.Role;
 
+
 @Repository
 public interface RoleRepository extends JpaRepository<Role, Long>, JpaSpecificationExecutor<Role> {
     boolean existsByName(String name);
+    Role findByName(String name);
 }

@@ -84,4 +84,8 @@ public class PermissionService {
         this.permissionRepository.deleteById(id);
     }
 
+    public boolean isSameName(String name) {
+        return this.permissionRepository.existsByName(name);
+    }
+
 }

@@ -4,21 +4,29 @@ import vn.hiendat04.jobhunter.domain.response.resume.ResResumeCreateDTO;
 import vn.hiendat04.jobhunter.domain.response.resume.ResResumeUpdateDTO;
 import vn.hiendat04.jobhunter.domain.response.resume.ResResumeFetchDTO;
 import vn.hiendat04.jobhunter.domain.response.ResultPaginationDTO;
+import vn.hiendat04.jobhunter.domain.Company;
+import vn.hiendat04.jobhunter.domain.Job;
 import vn.hiendat04.jobhunter.domain.Resume;
+import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.service.JobService;
 import vn.hiendat04.jobhunter.service.ResumeService;
 import vn.hiendat04.jobhunter.util.error.IdInvalidException;
+import vn.hiendat04.jobhunter.util.SecurityUtil;
 import vn.hiendat04.jobhunter.util.annotation.ApiMessage;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.turkraft.springfilter.boot.Filter;
+import com.turkraft.springfilter.builder.FilterBuilder;
+import com.turkraft.springfilter.converter.FilterSpecificationConverter;
 
 import jakarta.validation.Valid;
 
-import org.hibernate.transform.ResultTransformer;
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -29,8 +37,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
 
 @RestController
 @RequestMapping("/api/v1")
@@ -38,11 +44,16 @@ public class ResumeController {
     private final UserService userService;
     private final JobService jobService;
     private final ResumeService resumeService;
+    private final FilterSpecificationConverter filterSpecificationConverter;
+    private final FilterBuilder filterBuilder;
 
-    public ResumeController(UserService userService, JobService jobService, ResumeService resumeService) {
+    public ResumeController(UserService userService, JobService jobService, ResumeService resumeService,
+            FilterSpecificationConverter filterSpecificationConverter, FilterBuilder filterBuilder) {
         this.userService = userService;
         this.jobService = jobService;
         this.resumeService = resumeService;
+        this.filterSpecificationConverter = filterSpecificationConverter;
+        this.filterBuilder = filterBuilder;
     }
 
     @PostMapping("/resumes")
@@ -110,7 +121,39 @@ public class ResumeController {
     public ResponseEntity<ResultPaginationDTO> fetchAllResumes(
             @Filter Specification<Resume> specification,
             Pageable pageable) {
-        ResultPaginationDTO res = this.resumeService.fetchAllResumes(specification, pageable);
+
+        // Initilaize an array storing job_id
+        List<Long> arrJobIds = null;
+
+        // Get the current user's email
+        String email = SecurityUtil.getCurrentUserLogin().isPresent() == true
+                ? SecurityUtil.getCurrentUserLogin().get()
+                : "";
+        
+        // To query the current user
+        User currentUser = this.userService.getUserByUsername(email);
+        if (currentUser != null) {
+            // Get the user company
+            Company userCompany = currentUser.getCompany();
+            if (userCompany != null) {
+                // Get all the jobs of the company
+                List<Job> companyJobs = userCompany.getJobs();
+                if (companyJobs != null && companyJobs.size() > 0) {
+                    // Get only job id from the job list
+                    arrJobIds = companyJobs.stream().map(x -> x.getId()).collect(Collectors.toList());
+                }
+            }
+        }
+
+        // Add filter to only get the job in the company
+        Specification<Resume> jobInSpecs = this.filterSpecificationConverter
+                .convert(this.filterBuilder.field("job").in(filterBuilder.input(arrJobIds)).get());
+
+        // Combine two filter and pass them into the ResumeService to finish the feature
+        // that the HR can only see the resume of their company.
+        Specification<Resume> finalSpec = jobInSpecs.and(specification);
+
+        ResultPaginationDTO res = this.resumeService.fetchAllResumes(finalSpec, pageable);
         return ResponseEntity.ok().body(res);
     }
 
@@ -118,6 +161,5 @@ public class ResumeController {
     public ResponseEntity<ResultPaginationDTO> fetchResumeByUser(Pageable pageable) {
         return ResponseEntity.ok().body(this.resumeService.fetchResumeByUser(pageable));
     }
-    
 
 }
