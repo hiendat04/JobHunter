@@ -14,7 +14,7 @@ import vn.hiendat04.jobhunter.domain.Role;
 import vn.hiendat04.jobhunter.domain.User;
 import vn.hiendat04.jobhunter.service.UserService;
 import vn.hiendat04.jobhunter.util.SecurityUtil;
-import vn.hiendat04.jobhunter.util.error.IdInvalidException;
+import vn.hiendat04.jobhunter.util.error.PermissionException;
 
 public class PermissionInterceptor implements HandlerInterceptor {
 
@@ -26,7 +26,14 @@ public class PermissionInterceptor implements HandlerInterceptor {
     // Request => Spring Security => INTERCEPTOR => Controller => Service ....
     // This file is INTERCEPTOR.
     @Override
-    @Transactional
+    @Transactional // Because we set up the fetch type in our model is LAZY, which means we just
+                   // only can query the data when we "code" not by default. However, to query the
+                   // data, we need to go to the Controller to access the Service. But we are
+                   // currently in the Interceptor, we cannot use the Service before the
+                   // Controller. To solve this, we need to tell the Java Spring to create a
+                   // temporary session to allow us to query data we want in the database. When we
+                   // finish query, the session will be removed, and then we can go to the
+                   // Controller (is we pass the Interceptor here!)
     public boolean preHandle(
             HttpServletRequest request,
             HttpServletResponse response, Object handler)
@@ -54,12 +61,11 @@ public class PermissionInterceptor implements HandlerInterceptor {
                     // match with the permission in the Database
                     boolean isAllowed = permissions.stream()
                             .anyMatch(item -> item.getApiPath().equals(path) && item.getMethod().equals(httpMethod));
-                    System.out.println(">>> is Allowed: " + isAllowed);
                     if (isAllowed == false) {
-                        throw new IdInvalidException("You are not allowed to access this endpoint!");
+                        throw new PermissionException("You are not allowed to access this endpoint!");
                     }
                 } else {
-                    throw new IdInvalidException("You are not allowed to access this endpoint!");
+                    throw new PermissionException("You are not allowed to access this endpoint!");
                 }
             }
         }
