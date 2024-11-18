@@ -46,7 +46,7 @@ public class SecurityConfiguration {
 
         String[] whiteList = {
                 "/",
-                "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**",
+                "/api/v1/auth/login", "/api/v1/auth/refresh", "/storage/**", "/api/v1/email/**",
                 "/api/v1/companies/**", "/api/v1/jobs/**", "/api/v1/auth/register"
         };
         http
@@ -55,9 +55,9 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(
                         authz -> authz
                                 .requestMatchers(whiteList).permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/companies").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/jobs").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/api/v1/skills").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/companies/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/jobs/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/skills/**").permitAll()
                                 .anyRequest().authenticated())
                 .oauth2ResourceServer((oauth2) -> oauth2.jwt(Customizer.withDefaults()) // To activate
                                                                                         // BearerTokenAuthenticationFilter

@@ -80,11 +80,11 @@ public class DatabaseInitializer implements CommandLineRunner {
             arr.add(new Permission("Get a user by id", "/api/v1/users/{id}", "GET", "USERS"));
             arr.add(new Permission("Get users with pagination", "/api/v1/users", "GET", "USERS"));
 
-            arr.add(new Permission("Create a subcriber", "/api/v1/subcribers", "POST", "SUBCRIBERS"));
-            arr.add(new Permission("Update a subcriber", "/api/v1/subcribers", "PUT", "SUBCRIBERS"));
-            arr.add(new Permission("Delete a subcriber", "/api/v1/subcribers/{id}", "DELETE", "SUBCRIBERS"));
-            arr.add(new Permission("Get a subcriber by id", "/api/v1/subcribers/{id}", "GET", "SUBCRIBERS"));
-            arr.add(new Permission("Get subcribers with pagination", "/api/v1/subcribers", "GET", "SUBCRIBERS"));
+            arr.add(new Permission("Create a subscriber", "/api/v1/subscribers", "POST", "SUBSCRIBERS"));
+            arr.add(new Permission("Update a subscriber", "/api/v1/subscribers", "PUT", "SUBSCRIBERS"));
+            arr.add(new Permission("Delete a subscriber", "/api/v1/subscribers/{id}", "DELETE", "SUBSCRIBERS"));
+            arr.add(new Permission("Get a subscriber by id", "/api/v1/subscribers/{id}", "GET", "SUBSCRIBERS"));
+            arr.add(new Permission("Get subscribers with pagination", "/api/v1/subscribers", "GET", "SUBSCRIBERS"));
 
             arr.add(new Permission("Download a file", "/api/v1/files", "POST", "FILES"));
             arr.add(new Permission("Upload a file", "/api/v1/files", "GET", "FILES"));

@@ -64,6 +64,9 @@ public class SkillService {
         Skill currentSkill = this.fetchSkillById(id);
         currentSkill.getJobs().forEach(job -> job.getSkills().remove(currentSkill));
 
+        // Delete skill (inside subscriber_skill table);
+        currentSkill.getSubscribers().forEach(subscriber -> subscriber.getSkills().remove(currentSkill));
+
         // Then delete skill
         this.skillRepository.delete(currentSkill);
     }
