@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 // })
 
 @SpringBootApplication
-@EnableAsync
+// @EnableAsync
 @EnableScheduling
 public class JobhunterApplication {
 
